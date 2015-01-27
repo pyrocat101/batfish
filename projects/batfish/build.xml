@@ -98,7 +98,48 @@
             </sequential>
          </outofdate>
       </sequential>
-   </macrodef> 
+   </macrodef>
+
+   <!-- antlr4 build macro for parser (generate visitor instead of listener) -->
+   <macrodef name="antlr4parservisitor">
+      <attribute name="grammar.packagedir"/>
+      <attribute name="grammar.name"/>
+      <attribute name="antlrjar" default="lib/antlr/antlr-4.4-complete.jar"/>
+      <element name="dependencies"/>
+      <sequential>
+         <outofdate>
+            <sourcefiles>
+               <dependencies/>
+            </sourcefiles>
+            <targetfiles>
+               <fileset dir="src/@{grammar.packagedir}" includes="@{grammar.name}.java"/>
+               <fileset dir="src/@{grammar.packagedir}" includes="@{grammar.name}Visitor.java"/>
+               <fileset dir="src/@{grammar.packagedir}" includes="@{grammar.name}BaseVisitor.java"/>
+               <fileset dir="src/@{grammar.packagedir}" includes="@{grammar.name}.tokens"/>
+            </targetfiles>
+            <sequential>
+               <java fork="true" failonerror="true" jar="@{antlrjar}">
+                  <arg path="src/@{grammar.packagedir}/@{grammar.name}.g4"/>
+                  <arg value="-o"/>
+                  <arg path="src/@{grammar.packagedir}"/>
+                  <arg value="-no-listener"/>
+                  <arg value="-visitor"/>
+                  <arg value="-lib"/>
+                  <arg path="src/@{grammar.packagedir}"/>
+                  <arg value="-encoding"/>
+                  <arg value="UTF-8"/>
+                  <redirector>
+                     <outputfilterchain>
+                        <linecontainsregexp negate="true">
+                           <regexp pattern="warning\(109\):"/>
+                        </linecontainsregexp>
+                     </outputfilterchain>
+                  </redirector>
+               </java>
+            </sequential>
+         </outofdate>
+      </sequential>
+   </macrodef>
 
    <target name="all" depends="jar" description="Build everything"/>
 
@@ -260,6 +301,7 @@
          <antlr4lexer grammar.name="JuniperLexer" grammar.packagedir="org/batfish/grammar/juniper"/>
          <antlr4lexer grammar.name="LogiQLLexer" grammar.packagedir="org/batfish/grammar/logicblox"/>
          <antlr4lexer grammar.name="RoleLexer" grammar.packagedir="org/batfish/grammar/topology"/>
+         <antlr4lexer grammar.name="BPFLexer" grammar.packagedir="org/batfish/grammar/bpf"/>
       </parallel>
    </target>
 
@@ -348,6 +390,13 @@
                <fileset dir="src/org/batfish/grammar/topology" includes="RoleLexer.tokens"/>
             </dependencies>
          </antlr4parser>
+         <antlr4parservisitor grammar.name="BPFParser" grammar.packagedir="batfish/grammar/bpf">
+            <dependencies>
+               <fileset dir="src/batfish/grammar/bpf" includes="BPFParser.g4"/>
+               <fileset dir="src/batfish/grammar/bpf" includes="BPFLexer.g4"/>
+               <fileset dir="src/batfish/grammar/bpf" includes="BPFLexer.tokens"/>
+            </dependencies>
+         </antlr4parservisitor>
       </parallel>
    </target>
 
