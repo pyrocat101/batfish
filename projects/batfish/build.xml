@@ -164,6 +164,8 @@
          <fileset dir="src" includes="org/batfish/grammar/z3/ConcretizerQueryResultParser*.java"/>
          <fileset dir="src" includes="org/batfish/grammar/logicblox/LogiQLLexer*.java"/>
          <fileset dir="src" includes="org/batfish/grammar/logicblox/LogiQLParser*.java"/>
+         <fileset dir="src" includes="org/batfish/grammar/bpf/BPFLexer*.java"/>
+         <fileset dir="src" includes="org/batfish/grammar/bpf/BPFParser*.java"/>
       </delete>
 	</target>
 
