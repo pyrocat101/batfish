@@ -48,11 +48,11 @@ public class IDBuilder extends BPFParserBaseVisitor<ID> {
         return ctx.port_range().accept(this);
     }
 
-    @Override
-    public ID visitNet1(@NotNull BPFParser.Net1Context ctx) {
-        Ip address = new Ip(ctx.NID1().getText() + ".0.0.0");
-        return new Net(address, 8);
-    }
+//    @Override
+//    public ID visitNet1(@NotNull BPFParser.Net1Context ctx) {
+//        Ip address = new Ip(ctx.NID1().getText() + ".0.0.0");
+//        return new Net(address, 8);
+//    }
 
     @Override
     public ID visitNet2(@NotNull BPFParser.Net2Context ctx) {

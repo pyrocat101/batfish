@@ -19,7 +19,7 @@ public class Filter {
         this.protocol = protocol;
         this.type = type;
         this.id = id;
-        if (this.type != this.id.getType()) {
+        if (this.id != null && this.type != this.id.getType()) {
             throw new IllegalArgumentException("invalid syntax (type qualifier and primitive type mismatch)");
         }
     }
@@ -39,8 +39,10 @@ public class Filter {
             sb.append(' ');
             sb.append(type.toString());
         }
-        sb.append(' ');
-        sb.append(id.toString());
+        if (id != null) {
+            sb.append(' ');
+            sb.append(id.toString());
+        }
         return sb.toString().trim();
     }
 }

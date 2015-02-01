@@ -46,7 +46,7 @@ id: network_id              # Network
 network_id: CIDR            # Prefix
           | HID MASK HID    # Masked
           | HID             # Host
-          | NID1            # Net1
+          // | NID1            # Net1
           | NID2            # Net2
           | NID3            # Net3
           ;
