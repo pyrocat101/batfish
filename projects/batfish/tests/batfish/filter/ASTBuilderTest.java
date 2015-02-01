@@ -11,7 +11,7 @@ import org.apache.commons.io.IOUtils;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 import static org.hamcrest.CoreMatchers.is;
 
 public class ASTBuilderTest extends TestCase {

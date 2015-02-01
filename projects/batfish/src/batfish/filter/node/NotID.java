@@ -14,6 +14,6 @@ public class NotID extends ID {
 
     @Override
     public String toString() {
-        return super.toString();
+        return String.format("not %s", this.negated);
     }
 }
