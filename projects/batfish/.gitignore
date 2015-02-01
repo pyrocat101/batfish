@@ -23,3 +23,5 @@ LogiQLLexer*.java
 LogiQLParser*.java
 RoleLexer*.java
 RoleParser*.java
+BPFLexer*.java
+BPFParser*.java
