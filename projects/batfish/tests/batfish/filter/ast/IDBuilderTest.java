@@ -1,6 +1,7 @@
-package batfish.filter;
+package batfish.filter.ast;
 
-import batfish.filter.node.ID;
+import batfish.filter.ast.IDBuilder;
+import batfish.filter.ast.node.ID;
 import batfish.grammar.bpf.BPFLexer;
 import batfish.grammar.bpf.BPFParser;
 import junit.framework.TestCase;

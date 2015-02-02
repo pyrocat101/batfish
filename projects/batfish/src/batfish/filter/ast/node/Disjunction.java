@@ -1,4 +1,4 @@
-package batfish.filter.node;
+package batfish.filter.ast.node;
 
 public class Disjunction extends Expr {
     public final Expr lhs;

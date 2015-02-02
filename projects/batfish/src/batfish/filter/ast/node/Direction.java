@@ -1,4 +1,4 @@
-package batfish.filter.node;
+package batfish.filter.ast.node;
 
 public enum Direction {
     SRC("src"),

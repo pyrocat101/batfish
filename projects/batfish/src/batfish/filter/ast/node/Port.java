@@ -1,6 +1,6 @@
-package batfish.filter.node;
+package batfish.filter.ast.node;
 
-import batfish.filter.PortNames;
+import batfish.filter.ast.PortNames;
 
 public class Port extends ID {
     public final int port;

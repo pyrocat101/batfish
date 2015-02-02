@@ -1,6 +1,6 @@
-package batfish.filter;
+package batfish.filter.ast;
 
-import batfish.filter.node.*;
+import batfish.filter.ast.node.*;
 import batfish.grammar.bpf.BPFParser;
 import batfish.grammar.bpf.BPFParserBaseVisitor;
 import org.antlr.v4.runtime.misc.NotNull;

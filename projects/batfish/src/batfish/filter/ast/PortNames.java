@@ -1,4 +1,4 @@
-package batfish.filter;
+package batfish.filter.ast;
 
 import java.util.HashMap;
 import java.util.Map;

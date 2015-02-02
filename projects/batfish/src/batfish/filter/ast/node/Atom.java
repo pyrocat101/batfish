@@ -1,4 +1,4 @@
-package batfish.filter.node;
+package batfish.filter.ast.node;
 
 public class Atom extends Expr {
     public final Filter filter;

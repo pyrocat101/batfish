@@ -1,6 +1,7 @@
-package batfish.filter;
+package batfish.filter.ast;
 
-import batfish.filter.node.Expr;
+import batfish.filter.ast.ASTBuilder;
+import batfish.filter.ast.node.Expr;
 import batfish.grammar.bpf.BPFLexer;
 import batfish.grammar.bpf.BPFParser;
 import junit.framework.TestCase;
