@@ -21,4 +21,9 @@ public class PortRange extends ID {
     public String toString() {
         return String.format("%d-%d", low, high);
     }
+
+    @Override
+    public <T> T accept(IDVisitor<? extends T> visitor) {
+        return visitor.visit(this);
+    }
 }

@@ -1,5 +1,7 @@
 package batfish.filter.ast.node;
 
-public abstract class Expr {
+import batfish.filter.ast.ExprVisitor;
 
+public abstract class Expr {
+    public abstract <T> T accept(ExprVisitor<? extends T> visitor);
 }

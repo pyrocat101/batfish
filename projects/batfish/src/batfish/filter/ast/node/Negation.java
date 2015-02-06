@@ -1,5 +1,7 @@
 package batfish.filter.ast.node;
 
+import batfish.filter.ast.ExprVisitor;
+
 public class Negation extends Expr {
     public final Expr expr;
 
@@ -10,5 +12,10 @@ public class Negation extends Expr {
     @Override
     public String toString() {
         return String.format("!(%s)", expr);
+    }
+
+    @Override
+    public <T> T accept(ExprVisitor<? extends T> visitor) {
+        return visitor.visit(this);
     }
 }

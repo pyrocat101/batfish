@@ -16,4 +16,10 @@ public class NotID extends ID {
     public String toString() {
         return String.format("not %s", this.negated);
     }
+
+    @Override
+    public <T> T accept(IDVisitor<? extends T> visitor) {
+        assert false;
+        return null;
+    }
 }

@@ -22,4 +22,9 @@ public class Port extends ID {
     public String toString() {
         return Integer.toString(this.port);
     }
+
+    @Override
+    public <T> T accept(IDVisitor<? extends T> visitor) {
+        return visitor.visit(this);
+    }
 }

@@ -1,5 +1,7 @@
 package batfish.filter.ast.node;
 
+import batfish.filter.ast.ExprVisitor;
+
 public class Conjunction extends Expr {
     public final Expr lhs;
     public final Expr rhs;
@@ -12,5 +14,10 @@ public class Conjunction extends Expr {
     @Override
     public String toString() {
         return String.format("(%s) && (%s)", lhs, rhs);
+    }
+
+    @Override
+    public <T> T accept(ExprVisitor<? extends T> visitor) {
+        return visitor.visit(this);
     }
 }

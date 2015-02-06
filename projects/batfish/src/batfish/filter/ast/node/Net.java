@@ -23,4 +23,9 @@ public class Net extends ID {
     public String toString() {
         return this.net.toString();
     }
+
+    @Override
+    public <T> T accept(IDVisitor<? extends T> visitor) {
+        return visitor.visit(this);
+    }
 }
