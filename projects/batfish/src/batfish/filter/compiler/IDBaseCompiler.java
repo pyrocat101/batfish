@@ -21,7 +21,7 @@ public abstract class IDBaseCompiler implements IDVisitor<BooleanExpr> {
     @Override
     public BooleanExpr visit(Net net) {
         IntExpr lhs = new ExtractExpr(getIpVar(), HOST_NBITS - 1, HOST_NBITS - net.net.getPrefixLength());
-        IntExpr rhs = new LitIntExpr(net.net.getPrefixWildcard());
+        IntExpr rhs = new LitIntExpr(net.getAddress());
         return new EqExpr(lhs, rhs);
     }
 
