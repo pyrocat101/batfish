@@ -70,6 +70,8 @@ public class FilterCompiler {
      * compile(dir1 and dir2, id) = compile(dir1, id) and compile(dir2, id)
      * compile(dir1 or dir2, id) = compile(dir1, id) or compile2(dir2, id)
      * compile(dir, not id) = not compile(dir, id)
+     *
+     * compile(dir1 {rel} dir2, not id) = compile(dir1, not id) {rel} compile(dir2, not id)
      */
     public static BooleanExpr compile(Direction dir, ID id) {
         if (dir == Direction.SRC_AND_DST) {
