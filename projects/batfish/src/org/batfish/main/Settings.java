@@ -103,7 +103,6 @@ public class Settings {
    private static final String ARG_Z3_CONCRETIZER_NEGATED_INPUT_FILES = "concinneg";
    private static final String ARG_Z3_CONCRETIZER_OUTPUT_FILE = "concout";
    private static final String ARG_Z3_OUTPUT = "z3path";
-   private static final String ARG_PKT_FILTER = "packet-filter";
    private static final String ARGNAME_ACCEPT_NODE = "node";
    private static final String ARGNAME_ANONYMIZE = "path";
    private static final String ARGNAME_BLACK_HOLE_PATH = "path";
@@ -159,6 +158,7 @@ public class Settings {
    private static final String DEFAULT_Z3_OUTPUT = "z3-dataplane-output.smt2";
    private static final boolean DEFAULT_Z3_SIMPLIFY = true;
    private static final String EXECUTABLE_NAME = "batfish";
+   private static final String ENV_PACKET_FILTER = "PACKET_FILTER";
 
    private String _acceptNode;
    private boolean _anonymize;
@@ -954,9 +954,6 @@ public class Settings {
       _options.addOption(Option.builder()
             .desc("suppresses unimplemented-configuration-directive warnings")
             .longOpt(ARG_UNIMPLEMENTED_SUPPRESS).build());
-      _options.addOption(Option.builder()
-            .desc("BPF-style filter on packets")
-            .longOpt(ARG_PKT_FILTER).build());
    }
 
    private void parseCommandLine(String[] args) throws ParseException {
@@ -1115,7 +1112,7 @@ public class Settings {
       _redFlagRecord = !line.hasOption(ARG_RED_FLAG_SUPPRESS);
       _unimplementedAsError = line.hasOption(ARG_UNIMPLEMENTED_AS_ERROR);
       _unimplementedRecord = !line.hasOption(ARG_UNIMPLEMENTED_SUPPRESS);
-      _packetFilter = line.getOptionValue(ARG_PKT_FILTER);
+      _packetFilter = System.getenv(ENV_PACKET_FILTER);
    }
 
    public boolean printParseTree() {
