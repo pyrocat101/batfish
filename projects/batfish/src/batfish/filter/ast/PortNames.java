@@ -11,6 +11,7 @@ public class PortNames {
         nameToPort.put("ftp-data", 20);
         nameToPort.put("ftp", 21);
         nameToPort.put("ssh", 22);
+        nameToPort.put("telnet", 23);
         nameToPort.put("http", 80);
         nameToPort.put("ntp", 123);
         nameToPort.put("https", 443);
