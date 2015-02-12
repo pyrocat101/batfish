@@ -23,7 +23,7 @@ public class ASTBuilderTest extends TestCase {
         this.astBuilder = new ASTBuilder();
     }
 
-    private BPFParser getParser(String text) {
+    public static BPFParser getParser(String text) {
         InputStream input;
         ANTLRInputStream stream;
         try {
