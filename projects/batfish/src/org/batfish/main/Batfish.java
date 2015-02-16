@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
-import java.io.InputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -31,18 +30,11 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import batfish.filter.ast.ASTBuilder;
-import batfish.filter.ast.node.Expr;
-import batfish.filter.compiler.ExprCompiler;
-import batfish.grammar.bpf.BPFLexer;
-import batfish.grammar.bpf.BPFParser;
+import batfish.filter.BPF;
 import batfish.z3.node.BooleanExpr;
-import org.antlr.v4.runtime.ANTLRInputStream;
-import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -847,7 +839,7 @@ public class Batfish implements AutoCloseable {
       String nodeSetTextPath = nodeSetPath + ".txt";
 
       String filterText = _settings.getPacketFilter();
-      BooleanExpr filter = filterText != null ? compileFilter(filterText) : null;
+      BooleanExpr filter = filterText != null ? BPF.compile(filterText) : null;
 
       _logger.info("Reading node set from : \"" + nodeSetPath + "\"..");
       NodeSet nodes = (NodeSet) deserializeObject(new File(nodeSetPath));
@@ -2443,24 +2435,4 @@ public class Batfish implements AutoCloseable {
          wDuplicateRoleFlows.append("1\n");
       }
    }
-
-   public BooleanExpr compileFilter(String source) {
-      InputStream input;
-      ANTLRInputStream stream;
-      try {
-         input = IOUtils.toInputStream(source, "UTF-8");
-         stream = new ANTLRInputStream(input);
-      } catch (IOException e) {
-         throw new RuntimeException("IO error");
-      }
-      BPFLexer lexer = new BPFLexer(stream);
-      CommonTokenStream tokens = new CommonTokenStream(lexer);
-      BPFParser parser = new BPFParser(tokens);
-      Expr expr = parser.prog().accept(new ASTBuilder());
-      if (expr == null) {
-         return null;
-      }
-      return expr.accept(new ExprCompiler());
-   }
-
 }

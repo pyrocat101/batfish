@@ -1,7 +1,6 @@
 package batfish.filter;
 
 import batfish.filter.ast.ASTBuilder;
-import batfish.filter.ast.ASTBuilderTest;
 import batfish.filter.compiler.ExprCompiler;
 import batfish.filter.compiler.FilterCompiler;
 import batfish.z3.node.*;
@@ -20,7 +19,7 @@ public class FilterIntegrationTest {
     private static final ExprCompiler exprCompiler = new ExprCompiler();
 
     public static BooleanExpr compile(String src) {
-        return ASTBuilderTest.getParser(src).expr().accept(astBuilder).accept(exprCompiler);
+        return BPF.getParser(src).expr().accept(astBuilder).accept(exprCompiler);
     }
 
     @Test
