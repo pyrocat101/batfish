@@ -35,7 +35,7 @@ public class IDCompilerTest {
     @Test
     public void testNet() {
         BooleanExpr actual = new Net(new Prefix("8.8.8.0/24")).accept(compiler);
-        BooleanExpr expected = new EqExpr(new ExtractExpr(IP_VAR, 31, 8), new LitIntExpr(new Ip("8.8.8.0")));
+        BooleanExpr expected = new EqExpr(new ExtractExpr(IP_VAR, 8, 31), new LitIntExpr(0x080808, 24));
         assertEquals(expected.toString(), actual.toString());
     }
 

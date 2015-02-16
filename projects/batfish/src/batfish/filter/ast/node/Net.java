@@ -14,10 +14,6 @@ public class Net extends ID {
         this(new Prefix(network, prefixLength));
     }
 
-    public Ip getAddress() {
-        return net.getAddress().getNetworkAddress(net.getPrefixLength());
-    }
-
     @Override
     public Type getType() {
         return Type.NET;

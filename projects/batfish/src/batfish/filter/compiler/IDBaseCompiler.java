@@ -1,6 +1,7 @@
 package batfish.filter.compiler;
 
 import batfish.filter.ast.node.*;
+import batfish.representation.Prefix;
 import batfish.z3.Synthesizer;
 import batfish.z3.node.*;
 
@@ -13,6 +14,10 @@ public abstract class IDBaseCompiler implements IDVisitor<BooleanExpr> {
     public abstract VarIntExpr getIpVar();
     public abstract VarIntExpr getPortVar();
 
+    public static long getShiftedAddress(Prefix net) {
+        return net.getAddress().asLong() >>> (HOST_NBITS - net.getPrefixLength());
+    }
+
     @Override
     public BooleanExpr visit(Host host) {
         return new EqExpr(getIpVar(), new LitIntExpr(host.host));
@@ -20,8 +25,8 @@ public abstract class IDBaseCompiler implements IDVisitor<BooleanExpr> {
 
     @Override
     public BooleanExpr visit(Net net) {
-        IntExpr lhs = new ExtractExpr(getIpVar(), HOST_NBITS - 1, HOST_NBITS - net.net.getPrefixLength());
-        IntExpr rhs = new LitIntExpr(net.getAddress());
+        IntExpr lhs = new ExtractExpr(getIpVar(), HOST_NBITS - net.net.getPrefixLength(), HOST_NBITS - 1);
+        IntExpr rhs = new LitIntExpr(getShiftedAddress(net.net), net.net.getPrefixLength());
         return new EqExpr(lhs, rhs);
     }
 
