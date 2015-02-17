@@ -159,6 +159,7 @@ public class Settings {
    private static final boolean DEFAULT_Z3_SIMPLIFY = true;
    private static final String EXECUTABLE_NAME = "batfish";
    private static final String ENV_PACKET_FILTER = "PACKET_FILTER";
+   private static final String ENV_INGRESS_NODE_FILTER = "INGRESS_NODE_FILTER";
 
    private String _acceptNode;
    private boolean _anonymize;
@@ -255,6 +256,7 @@ public class Settings {
    private boolean _z3;
    private String _z3File;
    private String _packetFilter;
+   private String _ingressNodeFilter;
 
    public Settings() throws ParseException {
       this(new String[] {});
@@ -623,6 +625,10 @@ public class Settings {
 
    public String getPacketFilter() {
       return _packetFilter;
+   }
+
+   public String getIngressNodeFilter() {
+      return _ingressNodeFilter;
    }
 
    private void initOptions() {
@@ -1113,6 +1119,7 @@ public class Settings {
       _unimplementedAsError = line.hasOption(ARG_UNIMPLEMENTED_AS_ERROR);
       _unimplementedRecord = !line.hasOption(ARG_UNIMPLEMENTED_SUPPRESS);
       _packetFilter = System.getenv(ENV_PACKET_FILTER);
+      _ingressNodeFilter = System.getenv(ENV_INGRESS_NODE_FILTER);
    }
 
    public boolean printParseTree() {
