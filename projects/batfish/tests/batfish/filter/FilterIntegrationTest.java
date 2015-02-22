@@ -44,7 +44,7 @@ public class FilterIntegrationTest {
     public void testNotPort() {
         BooleanExpr expr = compile("port not telnet");
         assertEquals(
-                new OrExpr(Arrays.asList(
+                new AndExpr(Arrays.asList(
                         (BooleanExpr) new NotExpr(new EqExpr(SRC_PORT_VAR, new LitIntExpr(23, 16))),
                         (BooleanExpr) new NotExpr(new EqExpr(DST_PORT_VAR, new LitIntExpr(23, 16))))).toString(),
                 expr.toString());

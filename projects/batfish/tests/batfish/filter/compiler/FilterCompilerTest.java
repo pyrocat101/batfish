@@ -68,10 +68,10 @@ public class FilterCompilerTest {
                 Protocol.TCP, Direction.SRC_OR_DST, Type.PORT, new NotID(new Port(80))));
         BooleanExpr expected = new AndExpr(Arrays.asList(
                 FilterCompiler.compile(Protocol.TCP),
-                new OrExpr(Arrays.asList(
+                new AndExpr(Arrays.asList(
                         // invariant sub-typing because of mutable container
                         (BooleanExpr) new NotExpr(FilterCompiler.compile(Direction.SRC, new Port(80))),
                         (BooleanExpr) new NotExpr(FilterCompiler.compile(Direction.DST, new Port(80)))))));
-        assertEquals(expected.toString(), actual.toString());
+        assertEquals(expected.simplify().toString(), actual.simplify().toString());
     }
 }

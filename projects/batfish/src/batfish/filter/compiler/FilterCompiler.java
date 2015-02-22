@@ -67,21 +67,29 @@ public class FilterCompiler {
     }
 
     /**
+     * compile(dir1 and dir2, not id) = compile(dir1, not id) or compile(dir2, not id)
+     * compile(dir1 or dir2, not id) = compile(dir1, not id) and compile(dir2, not id)
      * compile(dir1 and dir2, id) = compile(dir1, id) and compile(dir2, id)
      * compile(dir1 or dir2, id) = compile(dir1, id) or compile2(dir2, id)
      * compile(dir, not id) = not compile(dir, id)
-     *
-     * compile(dir1 {rel} dir2, not id) = compile(dir1, not id) {rel} compile(dir2, not id)
      */
     public static BooleanExpr compile(Direction dir, ID id) {
         if (dir == Direction.SRC_AND_DST) {
             BooleanExpr t1 = compile(Direction.SRC, id);
             BooleanExpr t2 = compile(Direction.DST, id);
-            return new AndExpr(Arrays.asList(t1, t2));
+            if (id instanceof NotID) {
+                return new OrExpr(Arrays.asList(t1, t2));
+            } else {
+                return new AndExpr(Arrays.asList(t1, t2));
+            }
         } else if (dir == Direction.SRC_OR_DST) {
             BooleanExpr t1 = compile(Direction.SRC, id);
             BooleanExpr t2 = compile(Direction.DST, id);
-            return new OrExpr(Arrays.asList(t1, t2));
+            if (id instanceof NotID) {
+                return new AndExpr(Arrays.asList(t1, t2));
+            } else {
+                return new OrExpr(Arrays.asList(t1, t2));
+            }
         } else if (id instanceof NotID) {
             return new NotExpr(compile(dir, ((NotID) id).negated));
         } else if (dir == Direction.SRC) {
