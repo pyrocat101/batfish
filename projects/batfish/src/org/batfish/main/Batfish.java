@@ -19,8 +19,8 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
 import java.util.Map.Entry;
 
-import batfish.filter.BPF;
-import batfish.z3.node.BooleanExpr;
+import org.batfish.filter.BPF;
+import org.batfish.z3.node.BooleanExpr;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.apache.commons.io.FileUtils;

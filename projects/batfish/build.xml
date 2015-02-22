@@ -401,11 +401,11 @@
                <fileset dir="src/org/batfish/grammar/topology" includes="RoleLexer.tokens"/>
             </dependencies>
          </antlr4parser>
-         <antlr4parservisitor grammar.name="BPFParser" grammar.packagedir="batfish/grammar/bpf">
+         <antlr4parservisitor grammar.name="BPFParser" grammar.packagedir="org/batfish/grammar/bpf">
             <dependencies>
-               <fileset dir="src/batfish/grammar/bpf" includes="BPFParser.g4"/>
-               <fileset dir="src/batfish/grammar/bpf" includes="BPFLexer.g4"/>
-               <fileset dir="src/batfish/grammar/bpf" includes="BPFLexer.tokens"/>
+               <fileset dir="src/org/batfish/grammar/bpf" includes="BPFParser.g4"/>
+               <fileset dir="src/org/batfish/grammar/bpf" includes="BPFLexer.g4"/>
+               <fileset dir="src/org/batfish/grammar/bpf" includes="BPFLexer.tokens"/>
             </dependencies>
          </antlr4parservisitor>
       </parallel>
