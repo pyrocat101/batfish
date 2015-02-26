@@ -1,5 +1,6 @@
 package org.batfish.filter.ast;
 
+import org.batfish.filter.PacketFilterException;
 import org.batfish.filter.ast.node.*;
 import org.batfish.grammar.bpf.BPFParser;
 import org.batfish.grammar.bpf.BPFParserBaseVisitor;
@@ -52,7 +53,7 @@ public class ASTBuilder extends BPFParserBaseVisitor<Expr> {
     @Override
     public Expr visitIdOnly(@NotNull BPFParser.IdOnlyContext ctx) {
         if (this.lastFilter == null) {
-            throw new RuntimeException("invalid syntax (require qualifiers)");
+            throw new PacketFilterException("invalid syntax (qualifiers required)");
         }
         ID id = ctx.id().accept(idBuilder);
         Protocol proto = this.lastFilter.protocol;

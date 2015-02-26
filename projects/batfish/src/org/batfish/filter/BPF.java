@@ -5,7 +5,7 @@ import org.batfish.filter.ast.node.Expr;
 import org.batfish.filter.compiler.ExprCompiler;
 import org.batfish.grammar.bpf.BPFLexer;
 import org.batfish.grammar.bpf.BPFParser;
-import org.batfish.grammar.bpf.DieHardErrorStrategy;
+import org.batfish.grammar.bpf.SyntaxErrorListener;
 import org.batfish.z3.node.BooleanExpr;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -27,7 +27,9 @@ public class BPF {
         BPFLexer lexer = new BPFLexer(stream);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         BPFParser parser = new BPFParser(tokens);
-        parser.setErrorHandler(new DieHardErrorStrategy());
+        // suppress stderr output
+        parser.removeErrorListeners();
+        parser.addErrorListener(new SyntaxErrorListener());
         return parser;
     }
 

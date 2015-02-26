@@ -1,8 +1,8 @@
 package org.batfish.filter.ast;
 
 import org.batfish.filter.BPF;
+import org.batfish.filter.PacketFilterException;
 import org.batfish.filter.ast.node.Expr;
-import org.antlr.v4.runtime.RecognitionException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -63,13 +63,13 @@ public class ASTBuilderTest {
         assertEquals("ip", expr.toString());
     }
 
+    @Test(expected = PacketFilterException.class)
+    public void testInvalidIdOnly() {
+        BPF.getParser("80").expr().accept(astBuilder);
+    }
+
     @Test
     public void testIdOnly() {
-        try {
-            BPF.getParser("80").expr().accept(astBuilder);
-        } catch (RuntimeException e) {
-            assertThat(e.getMessage(), is("invalid syntax (require qualifiers)"));
-        }
         BPF.getParser("tcp dst port 80").expr().accept(astBuilder);
         Expr expr = BPF.getParser("443").expr().accept(astBuilder);
         assertEquals("if qualifiers are omitted, they are assumed to be those of last filter parsed",
@@ -137,7 +137,7 @@ public class ASTBuilderTest {
                 expr.toString());
     }
 
-    @Test(expected = RecognitionException.class)
+    @Test(expected = PacketFilterException.class)
     public void testInvalidQualifier() {
         BPF.getParser("not (src and dst udp or icmp)").expr().accept(astBuilder);
     }
