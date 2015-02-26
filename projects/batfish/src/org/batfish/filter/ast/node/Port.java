@@ -1,6 +1,6 @@
 package org.batfish.filter.ast.node;
 
-import org.batfish.filter.ast.PortNames;
+import org.batfish.filter.ast.Services;
 
 public class Port extends ID {
     public final int port;
@@ -10,7 +10,7 @@ public class Port extends ID {
     }
 
     public Port(String name) {
-        this(PortNames.get(name));
+        this(Services.get(name));
     }
 
     @Override
