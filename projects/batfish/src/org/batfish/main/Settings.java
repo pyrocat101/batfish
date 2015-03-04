@@ -71,6 +71,8 @@ public class Settings {
    private static final String ARG_QUERY_ALL = "all";
    private static final String ARG_REACH = "reach";
    private static final String ARG_REACH_PATH = "reachpath";
+   private static final String ARG_REACHABILITY = "reachability";
+   private static final String ARG_REACHABILITY_PATH = "reachabilitypath";
    private static final String ARG_RED_FLAG_AS_ERROR = "redflagerror";
    private static final String ARG_RED_FLAG_SUPPRESS = "redflagsuppress";
    private static final String ARG_REDIRECT_STDERR = "redirect";
@@ -127,6 +129,7 @@ public class Settings {
    private static final String ARGNAME_NODE_ROLES_PATH = "path";
    private static final String ARGNAME_NODE_SET_PATH = "path";
    private static final String ARGNAME_REACH_PATH = "path";
+   private static final String ARGNAME_REACHABILITY_PATH = "path";
    private static final String ARGNAME_REVERT = "branch-name";
    private static final String ARGNAME_ROLE_NODES_PATH = "path";
    private static final String ARGNAME_ROLE_REACHABILITY_QUERY_PATH = "path";
@@ -210,6 +213,8 @@ public class Settings {
    private String _logicSrcDir;
    private String _logLevel;
    private String _mpiPath;
+   private boolean _reachability;
+   private String _reachabilityPath;
    private String[] _negatedConcretizerInputFilePaths;
    private String _nodeRolesPath;
    private String _nodeSetPath;
@@ -465,6 +470,14 @@ public class Settings {
 
    public String getMultipathInconsistencyQueryPath() {
       return _mpiPath;
+   }
+
+   public boolean getReachabilityQuery() {
+      return _reachability;
+   }
+
+   public String getReachabilityQueryPath() {
+      return _reachabilityPath;
    }
 
    public String[] getNegatedConcretizerInputFilePaths() {
@@ -849,6 +862,18 @@ public class Settings {
       _options
             .addOption(Option
                   .builder()
+                  .desc("generate packet reachability query (requires packet filter)")
+                  .longOpt(ARG_REACHABILITY).build());
+      _options
+            .addOption(Option
+                  .builder()
+                  .hasArg()
+                  .argName(ARGNAME_REACHABILITY_PATH)
+                  .desc("path to read or write reachability query")
+                  .longOpt(ARG_REACHABILITY_PATH).build());
+      _options
+            .addOption(Option
+                  .builder()
                   .desc("generate interface-failure-inconsistency black-hole packet query")
                   .longOpt(ARG_BLACK_HOLE).build());
       _options
@@ -1096,6 +1121,8 @@ public class Settings {
          }
       }
       _nodeRolesPath = line.getOptionValue(ARG_NODE_ROLES_PATH);
+      _reachability = line.hasOption(ARG_REACHABILITY);
+      _reachabilityPath = line.getOptionValue(ARG_REACHABILITY_PATH);
       _roleNodesPath = line.getOptionValue(ARG_ROLE_NODES_PATH);
       _roleReachabilityQueryPath = line
             .getOptionValue(ARG_ROLE_REACHABILITY_QUERY_PATH);

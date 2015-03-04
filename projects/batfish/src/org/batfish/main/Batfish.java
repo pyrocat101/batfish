@@ -20,6 +20,7 @@ import java.util.*;
 import java.util.Map.Entry;
 
 import org.batfish.filter.BPF;
+import org.batfish.z3.*;
 import org.batfish.z3.node.BooleanExpr;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
@@ -90,14 +91,6 @@ import org.batfish.representation.cisco.CiscoVendorConfiguration;
 import org.batfish.util.StringFilter;
 import org.batfish.util.UrlZipExplorer;
 import org.batfish.util.Util;
-import org.batfish.z3.ConcretizerQuery;
-import org.batfish.z3.FailureInconsistencyBlackHoleQuerySynthesizer;
-import org.batfish.z3.MultipathInconsistencyQuerySynthesizer;
-import org.batfish.z3.QuerySynthesizer;
-import org.batfish.z3.ReachableQuerySynthesizer;
-import org.batfish.z3.RoleReachabilityQuerySynthesizer;
-import org.batfish.z3.RoleTransitQuerySynthesizer;
-import org.batfish.z3.Synthesizer;
 
 import com.logicblox.bloxweb.client.ServiceClientException;
 import com.logicblox.connect.Workspace.Relation;
@@ -828,14 +821,14 @@ public class Batfish implements AutoCloseable {
       String nodeSetTextPath = nodeSetPath + ".txt";
 
       String filterText = _settings.getPacketFilter();
-      BooleanExpr filter = filterText != null ? BPF.compile(filterText) : null;
+      BooleanExpr filter = BPF.compile(filterText);
 
       _logger.info("Reading node set from : \"" + nodeSetPath + "\"..");
       NodeSet nodes = (NodeSet) deserializeObject(new File(nodeSetPath));
       _logger.info("OK\n");
 
       String ingressNodeFilter = _settings.getIngressNodeFilter();
-      nodes = ingressNodeFilter != null ? NodeSet.filter(nodes, ingressNodeFilter) : nodes;
+      nodes = NodeSet.filter(nodes, ingressNodeFilter);
 
       for (String hostname : nodes) {
          QuerySynthesizer synth = new MultipathInconsistencyQuerySynthesizer(hostname, filter);
@@ -843,6 +836,48 @@ public class Batfish implements AutoCloseable {
          String mpiQueryPath = mpiQueryBasePath + "-" + hostname + ".smt2";
          _logger.info("Writing query to: \"" + mpiQueryPath + "\"..");
          writeFile(mpiQueryPath, queryText);
+         _logger.info("OK\n");
+      }
+
+      _logger.info("Writing node lines for next stage..");
+      StringBuilder sb = new StringBuilder();
+      for (String node : nodes) {
+         sb.append(node + "\n");
+      }
+      writeFile(nodeSetTextPath, sb.toString());
+      _logger.info("OK\n");
+
+      printElapsedTime();
+   }
+
+   private void genReachabilityQueries() {
+      _logger.info("\n*** GENERATING REACHABILITY QUERIES ***\n");
+      resetTimer();
+
+      String reachQueryBasePath = _settings.getReachabilityQueryPath();
+      String nodeSetPath = _settings.getNodeSetPath();
+      String nodeSetTextPath = nodeSetPath + ".txt";
+
+      String filterText = _settings.getPacketFilter();
+      BooleanExpr filter = BPF.compile(filterText);
+      if (filter == null) {
+         throw new BatfishException(
+                 "packet filter is required for reachability analysis");
+      }
+
+      _logger.info("Reading node set from : \"" + nodeSetPath + "\"..");
+      NodeSet nodes = (NodeSet) deserializeObject(new File(nodeSetPath));
+      _logger.info("OK\n");
+
+      String ingressNodeFilter = _settings.getIngressNodeFilter();
+      nodes = NodeSet.filter(nodes, ingressNodeFilter);
+
+      for (String hostname : nodes) {
+         QuerySynthesizer synth = new ReachableQuerySynthesizer(hostname, filter);
+         String queryText = synth.getQueryText();
+         String reachQueryPath = reachQueryBasePath + "-" + hostname + ".smt2";
+         _logger.info("Writing query to: \"" + reachQueryPath + "\"..");
+         writeFile(reachQueryPath, queryText);
          _logger.info("OK\n");
       }
 
@@ -2114,6 +2149,11 @@ public class Batfish implements AutoCloseable {
 
       if (_settings.getGenerateMultipathInconsistencyQuery()) {
          genMultipathQueries();
+         return;
+      }
+
+      if (_settings.getReachabilityQuery()) {
+         genReachabilityQueries();
          return;
       }
 

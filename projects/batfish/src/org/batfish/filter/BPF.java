@@ -34,6 +34,8 @@ public class BPF {
     }
 
     public static BooleanExpr compile(String src) {
+        if (src == null)
+            return null;
         return compile(getParser(src));
     }
 

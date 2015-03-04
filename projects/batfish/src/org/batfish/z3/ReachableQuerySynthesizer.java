@@ -1,19 +1,14 @@
 package org.batfish.z3;
 
-import org.batfish.z3.node.AcceptExpr;
-import org.batfish.z3.node.AndExpr;
-import org.batfish.z3.node.NodeAcceptExpr;
-import org.batfish.z3.node.OriginateExpr;
-import org.batfish.z3.node.QueryExpr;
-import org.batfish.z3.node.QueryRelationExpr;
-import org.batfish.z3.node.RuleExpr;
-import org.batfish.z3.node.SaneExpr;
+import org.batfish.z3.node.*;
 
 public class ReachableQuerySynthesizer implements QuerySynthesizer {
 
    private String _queryText;
 
-   public ReachableQuerySynthesizer(String originationNode, String acceptNode) {
+   public ReachableQuerySynthesizer(String originationNode,
+                                    String acceptNode,
+                                    BooleanExpr filter) {
       OriginateExpr originate = new OriginateExpr(originationNode);
       RuleExpr injectSymbolicPackets = new RuleExpr(originate);
       AndExpr queryConditions = new AndExpr();
@@ -25,6 +20,9 @@ public class ReachableQuerySynthesizer implements QuerySynthesizer {
          queryConditions.addConjunct(AcceptExpr.INSTANCE);
       }
       queryConditions.addConjunct(SaneExpr.INSTANCE);
+      if (filter != null) {
+         queryConditions.addConjunct(filter);
+      }
       RuleExpr queryRule = new RuleExpr(queryConditions,
             QueryRelationExpr.INSTANCE);
       QueryExpr query = new QueryExpr(QueryRelationExpr.INSTANCE);
@@ -38,6 +36,14 @@ public class ReachableQuerySynthesizer implements QuerySynthesizer {
       String queryText = sb.toString();
       _queryText = queryText;
 
+   }
+
+   public ReachableQuerySynthesizer(String originatorNode, BooleanExpr filterText) {
+      this(originatorNode, null, filterText);
+   }
+
+   public ReachableQuerySynthesizer(String originatorNode, String acceptNode) {
+      this(originatorNode, acceptNode, null);
    }
 
    @Override
