@@ -892,6 +892,48 @@ public class Batfish implements AutoCloseable {
       printElapsedTime();
    }
 
+   private void genUnreachabilityQueries() {
+      _logger.info("\n*** GENERATING UNREACHABILITY QUERIES ***\n");
+      resetTimer();
+
+      String unreachQueryBasePath = _settings.getUnreachabilityQueryPath();
+      String nodeSetPath = _settings.getNodeSetPath();
+      String nodeSetTextPath = nodeSetPath + ".txt";
+
+      String filterText = _settings.getPacketFilter();
+      BooleanExpr filter = BPF.compile(filterText);
+      if (filter == null) {
+         throw new BatfishException(
+                 "packet filter is required for reachability analysis");
+      }
+
+      _logger.info("Reading node set from : \"" + nodeSetPath + "\"..");
+      NodeSet nodes = (NodeSet) deserializeObject(new File(nodeSetPath));
+      _logger.info("OK\n");
+
+      String ingressNodeFilter = _settings.getIngressNodeFilter();
+      nodes = NodeSet.filter(nodes, ingressNodeFilter);
+
+      for (String hostname : nodes) {
+         QuerySynthesizer synth = new UnreachableQuerySynthesizer(hostname, filter);
+         String queryText = synth.getQueryText();
+         String unreachQueryPath = unreachQueryBasePath + "-" + hostname + ".smt2";
+         _logger.info("Writing query to: \"" + unreachQueryPath + "\"..");
+         writeFile(unreachQueryPath, queryText);
+         _logger.info("OK\n");
+      }
+
+      _logger.info("Writing node lines for next stage..");
+      StringBuilder sb = new StringBuilder();
+      for (String node : nodes) {
+         sb.append(node + "\n");
+      }
+      writeFile(nodeSetTextPath, sb.toString());
+      _logger.info("OK\n");
+
+      printElapsedTime();
+   }
+
    private void genReachableQueries() {
       _logger.info("\n*** GENERATING REACHABLE QUERIES ***\n");
       resetTimer();
@@ -2154,6 +2196,11 @@ public class Batfish implements AutoCloseable {
 
       if (_settings.getReachabilityQuery()) {
          genReachabilityQueries();
+         return;
+      }
+
+      if (_settings.getUnreachabilityQuery()) {
+         genUnreachabilityQueries();
          return;
       }
 

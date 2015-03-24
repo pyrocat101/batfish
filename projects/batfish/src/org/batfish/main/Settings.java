@@ -96,6 +96,8 @@ public class Settings {
    private static final String ARG_THROW_ON_PARSER_ERROR = "throwparser";
    private static final String ARG_UNIMPLEMENTED_AS_ERROR = "unimplementederror";
    private static final String ARG_UNIMPLEMENTED_SUPPRESS = "unimplementedsuppress";
+   private static final String ARG_UNREACHABILITY = "unreachability";
+   private static final String ARG_UNREACHABILITY_PATH = "unreachabilitypath";
    private static final String ARG_UPDATE = "update";
    private static final String ARG_VAR_SIZE_MAP_PATH = "vsmpath";
    private static final String ARG_WORKSPACE = "workspace";
@@ -138,6 +140,7 @@ public class Settings {
    private static final String ARGNAME_RULES_WITH_SUPPRESSED_WARNINGS = "rule-names";
    private static final String ARGNAME_SERIALIZE_INDEPENDENT_PATH = "path";
    private static final String ARGNAME_SERIALIZE_VENDOR_PATH = "path";
+   private static final String ARGNAME_UNREACHABILITY_PATH = "path";
    private static final String ARGNAME_VAR_SIZE_MAP_PATH = "path";
    private static final String ARGNAME_Z3_CONCRETIZER_INPUT_FILES = "paths";
    private static final String ARGNAME_Z3_CONCRETIZER_NEGATED_INPUT_FILES = "paths";
@@ -213,8 +216,6 @@ public class Settings {
    private String _logicSrcDir;
    private String _logLevel;
    private String _mpiPath;
-   private boolean _reachability;
-   private String _reachabilityPath;
    private String[] _negatedConcretizerInputFilePaths;
    private String _nodeRolesPath;
    private String _nodeSetPath;
@@ -229,6 +230,8 @@ public class Settings {
    private boolean _queryAll;
    private boolean _reach;
    private String _reachPath;
+   private boolean _reachability;
+   private String _reachabilityPath;
    private boolean _redFlagAsError;
    private boolean _redFlagRecord;
    private boolean _redirectStdErr;
@@ -255,6 +258,8 @@ public class Settings {
    private boolean _throwOnParserError;
    private boolean _unimplementedAsError;
    private boolean _unimplementedRecord;
+   private boolean _unreachability;
+   private String _unreachabilityPath;
    private boolean _update;
    private String _varSizeMapPath;
    private String _workspaceName;
@@ -616,6 +621,14 @@ public class Settings {
       return _unimplementedRecord;
    }
 
+   public boolean getUnreachabilityQuery() {
+      return _unreachability;
+   }
+
+   public String getUnreachabilityQueryPath() {
+      return _unreachabilityPath;
+   }
+
    public boolean getUpdate() {
       return _update;
    }
@@ -871,6 +884,18 @@ public class Settings {
                   .argName(ARGNAME_REACHABILITY_PATH)
                   .desc("path to read or write reachability query")
                   .longOpt(ARG_REACHABILITY_PATH).build());
+      _options
+            .addOption(Option
+                  .builder()
+                  .desc("generate packet unreachability query (requires packet filter)")
+                  .longOpt(ARG_UNREACHABILITY).build());
+      _options
+            .addOption(Option
+                  .builder()
+                  .hasArg()
+                  .argName(ARGNAME_UNREACHABILITY_PATH)
+                  .desc("path to read or write unreachability query")
+                  .longOpt(ARG_UNREACHABILITY_PATH).build());
       _options
             .addOption(Option
                   .builder()
@@ -1145,6 +1170,8 @@ public class Settings {
       _redFlagRecord = !line.hasOption(ARG_RED_FLAG_SUPPRESS);
       _unimplementedAsError = line.hasOption(ARG_UNIMPLEMENTED_AS_ERROR);
       _unimplementedRecord = !line.hasOption(ARG_UNIMPLEMENTED_SUPPRESS);
+      _unreachability = line.hasOption(ARG_UNREACHABILITY);
+      _unreachabilityPath = line.getOptionValue(ARG_UNREACHABILITY_PATH);
       _packetFilter = System.getenv(ENV_PACKET_FILTER);
       _ingressNodeFilter = System.getenv(ENV_INGRESS_NODE_FILTER);
    }
